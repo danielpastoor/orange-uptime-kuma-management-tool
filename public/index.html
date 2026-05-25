@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Orange Uptime Kuma — Klantenbeheer</title>
+    <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<header>
+    <span class="logo">Orange Uptime Kuma</span>
+    <span class="subtitle">Klantenbeheer Dashboard</span>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Nieuwe klant deployen</h2>
+        <form id="deploy-form">
+            <div class="form-grid">
+                <div class="field">
+                    <label for="name">Klantnaam *</label>
+                    <input id="name" type="text" placeholder="Bijv. Acme BV" required />
+                </div>
+                <div class="field">
+                    <label for="email">E-mailadres *</label>
+                    <input id="email" type="email" placeholder="klant@bedrijf.nl" required />
+                </div>
+                <div class="field">
+                    <label for="company">Bedrijfsnaam</label>
+                    <input id="company" type="text" placeholder="Acme BV" />
+                </div>
+                <div class="field">
+                    <label for="domain">Domein / Subdomein</label>
+                    <input id="domain" type="text" placeholder="acme.monitoring.example.nl" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit" id="deploy-btn">
+                    Deploy omgeving
+                </button>
+                <span id="deploy-status"></span>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>Actieve klantomgevingen</h2>
+        <div class="table-wrap">
+            <table id="customers-table">
+                <thead>
+                    <tr>
+                        <th>Klant</th>
+                        <th>E-mail</th>
+                        <th>Bedrijf</th>
+                        <th>Domein</th>
+                        <th>Gedeployd op</th>
+                        <th>Status</th>
+                        <th>Actie</th>
+                    </tr>
+                </thead>
+                <tbody id="customers-body">
+                    <tr><td colspan="7" class="empty-state">Laden…</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
