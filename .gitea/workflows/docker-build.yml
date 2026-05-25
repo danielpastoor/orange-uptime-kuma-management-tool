@@ -1,0 +1,60 @@
+name: Build Docker image
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build image
+        env:
+          DOCKER_BUILDKIT: "1"
+        run: |
+          IMAGE_NAME="${{ github.repository }}"
+          IMAGE_TAG="${{ github.sha }}"
+
+          echo "Building ${IMAGE_NAME}:${IMAGE_TAG}"
+          docker build --pull --tag "${IMAGE_NAME}:${IMAGE_TAG}" .
+
+      - name: Login to registry
+        if: ${{ github.event_name == 'push' }}
+        env:
+          REGISTRY: ${{ secrets.REGISTRY }}
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        run: |
+          if [ -z "${REGISTRY}" ]; then
+            echo "Missing secrets.REGISTRY (e.g. gitea.example.com)" >&2
+            exit 1
+          fi
+
+          if [ -z "${REGISTRY_USERNAME}" ] || [ -z "${REGISTRY_PASSWORD}" ]; then
+            echo "Missing secrets.REGISTRY_USERNAME and/or secrets.REGISTRY_PASSWORD" >&2
+            exit 1
+          fi
+
+          echo "${REGISTRY_PASSWORD}" | docker login "${REGISTRY}" -u "${REGISTRY_USERNAME}" --password-stdin
+
+      - name: Tag & push image
+        if: ${{ github.event_name == 'push' }}
+        env:
+          REGISTRY: ${{ secrets.REGISTRY }}
+        run: |
+          IMAGE_NAME="${{ github.repository }}"
+          IMAGE_TAG="${{ github.sha }}"
+          REMOTE_IMAGE="${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+
+          echo "Pushing ${REMOTE_IMAGE}"
+          docker tag "${IMAGE_NAME}:${IMAGE_TAG}" "${REMOTE_IMAGE}"
+          docker push "${REMOTE_IMAGE}"
+
+      - name: Show built images
+        run: docker images | head -n 25
