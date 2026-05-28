@@ -20,6 +20,8 @@ steps:
       tags:
         - latest
         - ${DRONE_COMMIT_SHA:0:7}
+      build_args:
+        - BUILD_VERSION=${DRONE_COMMIT_SHA:0:7}
       username:
         from_secret: GITEA_REGISTRY_USERNAME
       password:

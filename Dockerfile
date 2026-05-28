@@ -10,6 +10,9 @@ COPY . .
 # customers.db lives here — mount as a volume to persist across restarts
 VOLUME ["/app/data"]
 
+ARG BUILD_VERSION=dev
+ENV BUILD_VERSION=$BUILD_VERSION
+
 EXPOSE 4000
 
 CMD ["node", "server.js"]

@@ -73,6 +73,13 @@ async function stopCustomer(id) {
 
 window.stopCustomer = stopCustomer;
 
+fetch("/api/version")
+    .then(r => r.json())
+    .then(({ version }) => {
+        document.getElementById("build-version").textContent = `v${version}`;
+    })
+    .catch(() => {});
+
 document.getElementById("deploy-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const btn = document.getElementById("deploy-btn");

@@ -194,3 +194,10 @@ td { padding: 0.65rem 0.9rem; vertical-align: middle; }
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.78rem;
+    color: var(--gray);
+}

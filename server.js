@@ -6,10 +6,13 @@ const crypto = require("crypto");
 const Database = require("better-sqlite3");
 const k8s = require("@kubernetes/client-node");
 
+const pkg = require("./package.json");
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 const IMAGE = process.env.KUMA_IMAGE || "orange-uptime-kuma:latest";
 const NAMESPACE = process.env.K8S_NAMESPACE || "default";
+const BUILD_VERSION = process.env.BUILD_VERSION || pkg.version;
 
 const dbPath = path.join(__dirname, "data", "customers.db");
 require("fs").mkdirSync(path.join(__dirname, "data"), { recursive: true });
@@ -102,6 +105,10 @@ function buildService(customer) {
     };
 }
 
+
+app.get("/api/version", (req, res) => {
+    res.json({ version: BUILD_VERSION });
+});
 
 app.get("/api/customers", (req, res) => {
     const rows = db.prepare("SELECT * FROM customers ORDER BY deployed_at DESC").all();
