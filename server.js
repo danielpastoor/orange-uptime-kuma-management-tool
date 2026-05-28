@@ -119,8 +119,8 @@ app.post("/api/deploy", async (req, res) => {
     const customer = { id, name, email, company: company || "", domain: domain || "" };
 
     try {
-        await k8sApps.createNamespacedDeployment({ namespace: NAMESPACE, body: buildDeployment(customer) });
-        await k8sCore.createNamespacedService({ namespace: NAMESPACE, body: buildService(customer) });
+        await k8sApps.createNamespacedDeployment(NAMESPACE, buildDeployment(customer));
+        await k8sCore.createNamespacedService(NAMESPACE, buildService(customer));
     } catch (err) {
         console.error("Kubernetes error:", err.body || err.message);
         return res.status(500).json({ error: "Failed to create Kubernetes resources", detail: err.body?.message || err.message });
@@ -142,8 +142,8 @@ app.delete("/api/customers/:id", async (req, res) => {
     }
 
     try {
-        await k8sApps.deleteNamespacedDeployment({ name: `kuma-${id}`, namespace: NAMESPACE });
-        await k8sCore.deleteNamespacedService({ name: `kuma-${id}`, namespace: NAMESPACE });
+        await k8sApps.deleteNamespacedDeployment(`kuma-${id}`, NAMESPACE);
+        await k8sCore.deleteNamespacedService(`kuma-${id}`, NAMESPACE);
     } catch (err) {
         console.error("Kubernetes error on delete:", err.body || err.message);
         // Continue and mark as stopped even if K8s resources were already gone
