@@ -2,19 +2,28 @@ kind: pipeline
 type: docker
 name: default
 
+trigger:
+  event:
+    - push
+    - pull_request
+  branch:
+    - main
+
 steps:
   - name: build-and-push
     image: plugins/docker
     settings:
-      registry: 10.24.36.10:30080
-      repo: 10.24.36.10:30080/wulpy/orange-uptime-kuma-management-tool
+      registry:
+        from_secret: GITEA_REGISTRY
+      repo:
+        from_secret: MGMT_IMAGE_REPO
       tags:
-        - ${DRONE_COMMIT_SHA}
         - latest
+        - ${DRONE_COMMIT_SHA:0:7}
       username:
-        from_secret: registry_username
+        from_secret: GITEA_REGISTRY_USERNAME
       password:
-        from_secret: registry_password
+        from_secret: GITEA_REGISTRY_PASSWORD
       insecure: true
     when:
       event:
@@ -23,8 +32,10 @@ steps:
   - name: build-dry-run
     image: plugins/docker
     settings:
-      registry: 10.24.36.10:30080
-      repo: 10.24.36.10:30080/wulpy/orange-uptime-kuma-management-tool
+      registry:
+        from_secret: GITEA_REGISTRY
+      repo:
+        from_secret: MGMT_IMAGE_REPO
       dry_run: true
       insecure: true
     when:
