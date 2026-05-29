@@ -1,7 +1,7 @@
 {
   "name": "orange-uptime-kuma-dashboard",
   "version": "1.0.0",
-  "description": "Marketing dashboard to provision Orange Uptime Kuma customer environments",
+  "description": "Read-only customer health dashboard for Orange Uptime Kuma instances",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@kubernetes/client-node": "^0.21.0",
-    "better-sqlite3": "^9.4.3",
     "express": "^4.18.3"
   },
   "engines": {
